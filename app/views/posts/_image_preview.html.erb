@@ -1,0 +1,9 @@
+<div class="my-3" data-controller="previews">
+    <%= form.label :images %><br>
+    <%= form.file_field :images,
+        multiple: true,
+        direct_upload: true,
+        data: { action: "change->previews#preview", previews_target: "input" } %>
+
+    <div data-previews-target="preview" class="flex space-x-2 mt-2"></div>
+</div>
