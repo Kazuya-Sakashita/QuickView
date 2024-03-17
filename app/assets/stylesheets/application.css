@@ -13,3 +13,9 @@
  *= require_tree .
  *= require_self
  */
+
+.preview-image {
+  max-width: 100px; /* 最大幅を100pxに設定 */
+  max-height: 100px; /* 最大高さを100pxに設定 */
+  margin: 5px; /* 画像の周りに少しマージンを設ける */
+}
