@@ -1,34 +1,52 @@
 import { Controller } from "@hotwired/stimulus";
 
-// Connects to data-controller="previews"
 export default class extends Controller {
   static targets = ["input", "preview"];
 
-  connect() {
-    this.displayPreviews();
-  }
-
   preview() {
-    this.displayPreviews();
-  }
-
-  displayPreviews() {
     const input = this.inputTarget;
     const files = input.files;
-    this.previewTarget.innerHTML = ""; // 既存のプレビューをクリア
+    const previewContainer = this.previewTarget;
+    previewContainer.innerHTML = ""; // 既存のプレビューをクリア
 
     Array.from(files).forEach((file) => {
       const reader = new FileReader();
-      reader.onloadend = () => {
-        const img = document.createElement("img");
-        img.src = reader.result;
-        img.classList.add("preview-image"); // 必要に応じてスタイルクラスを追加
-        this.previewTarget.appendChild(img);
+
+      reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target.result;
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          const ctx = canvas.getContext("2d");
+          const maxWidth = 200; // リサイズ後の最大幅
+          const maxHeight = 200; // リサイズ後の最大高さ
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > maxWidth) {
+              height *= maxWidth / width;
+              width = maxWidth;
+            }
+          } else {
+            if (height > maxHeight) {
+              width *= maxHeight / height;
+              height = maxHeight;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          ctx.drawImage(img, 0, 0, width, height);
+
+          const dataUrl = canvas.toDataURL("image/png");
+          const outputImg = document.createElement("img");
+          outputImg.src = dataUrl;
+          previewContainer.appendChild(outputImg);
+        };
       };
 
-      if (file) {
-        reader.readAsDataURL(file);
-      }
+      reader.readAsDataURL(file);
     });
   }
 }

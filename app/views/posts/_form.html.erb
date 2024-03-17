@@ -16,10 +16,6 @@
     <%= form.text_field :title, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
   </div>
 
-  <div>
-    <%= form.label :images %>
-    <%= form.file_field :images, multiple: true, accept: 'image/*' %>
-  </div>
 
   <%= render 'posts/image_preview', form: form, post: @post %>
 
